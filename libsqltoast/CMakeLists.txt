@@ -115,5 +115,5 @@ EXPORT(TARGETS sqltoast FILE sqltoast_config.cmake)
 
 # includes
 install(DIRECTORY include
-    DESTINATION include/sqltoast
+    DESTINATION ./
     FILES_MATCHING PATTERN "*.h*")
