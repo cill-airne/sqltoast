@@ -108,7 +108,7 @@ INSTALL(TARGETS sqltoast EXPORT sqltoast_config
 # This makes the project importable from the install directory
 # Put config file in per-project dir (name MUST match), can also
 # just go into 'cmake'.
-INSTALL(EXPORT sqltoast_config DESTINATION share/sqltoast/cmake)
+INSTALL(EXPORT sqltoast_config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/sqltoast)
 
 # This makes the project importable from the build directory
 EXPORT(TARGETS sqltoast FILE sqltoast_config.cmake)
