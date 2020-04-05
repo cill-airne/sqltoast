@@ -19,4 +19,4 @@ SET(
 INCLUDE(GNUInstallDirs)
 
 ADD_SUBDIRECTORY(libsqltoast)
-ADD_SUBDIRECTORY(sqltoaster)
+# ADD_SUBDIRECTORY(sqltoaster)
