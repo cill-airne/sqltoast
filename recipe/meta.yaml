@@ -15,6 +15,7 @@ requirements:
   build:
     - cmake
     - make  # [unix]
+    - libunwind
     - {{ compiler('cxx') }}
 
 about:
