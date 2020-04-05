@@ -15,10 +15,7 @@ requirements:
   build:
     - cmake
     - make  # [unix]
-    - libunwind
     - {{ compiler('cxx') }}
-  install:
-    - libunwind
 about:
   summary: 'SQL'
   description: 'SQL'
