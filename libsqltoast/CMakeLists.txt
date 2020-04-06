@@ -87,7 +87,7 @@ TARGET_COMPILE_OPTIONS(sqltoast PUBLIC ${LIBSQLTOAST_BUILD_OPTS})
 # To build with debugging symbols and some extra tracing functionality, do:
 # $ROOT_DIR/build $> cmake -DCMAKE_BUILD_TYPE=debug ..
 
-SET(LIBSQLTOAST_BUILD_DEBUG_OPTS -g -O0)
+SET(LIBSQLTOAST_BUILD_DEBUG_OPTS -g)
 TARGET_COMPILE_OPTIONS(sqltoast
    PUBLIC $<$<CONFIG:DEBUG>:${LIBSQLTOAST_BUILD_DEBUG_OPTS}>
 )
