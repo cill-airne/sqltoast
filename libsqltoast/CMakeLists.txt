@@ -1,4 +1,5 @@
 PROJECT(libsqltoast VERSION 0.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 SET(PROJECT_DESCRIPTION "A recursive descent parser for SQL")
 SET(SQLTOAST_VERSION_MAJOR 0)
@@ -51,32 +52,53 @@ SET(LIBSQLTOAST_SOURCES
     src/print/value_expression.cc
 )
 
+SET(LIBSQLTOAST_HEADERS 
+    include/sqltoast/value.h
+    include/sqltoast/value_expression.h
+    include/sqltoast/table_reference.h
+    include/sqltoast/statement.h
+    include/sqltoast/sqltoast.h
+    include/sqltoast/query.h
+    include/sqltoast/print.h
+    include/sqltoast/predicate.h
+    include/sqltoast/lexeme.h
+    include/sqltoast/identifier.h
+    include/sqltoast/debug.h
+    include/sqltoast/data_type.h
+    include/sqltoast/constraint.h
+    include/sqltoast/column_reference.h
+    include/sqltoast/column_definition.h
+)
+
 ADD_LIBRARY(sqltoast SHARED ${LIBSQLTOAST_SOURCES})
 SET_TARGET_PROPERTIES(sqltoast PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
-SET(LIBSQLTOAST_BUILD_OPTS, "-Wall --no-rtti")
-TARGET_COMPILE_OPTIONS(sqltoast
-    PUBLIC ${LIBSQLTOAST_BUILD_OPTS}
+
+SET_TARGET_PROPERTIES(sqltoast PROPERTIES
+    PUBLIC_HEADER "${LIBSQLTOAST_HEADERS}"
 )
 
+SET(LIBSQLTOAST_BUILD_OPTS -Wall --no-rtti) 
+TARGET_COMPILE_OPTIONS(sqltoast PUBLIC ${LIBSQLTOAST_BUILD_OPTS}) 
+
 # To build with debugging symbols and some extra tracing functionality, do:
-#
 # $ROOT_DIR/build $> cmake -DCMAKE_BUILD_TYPE=debug ..
-SET(LIBSQLTOAST_BUILD_DEBUG_OPTS, "-Werror -DSQLTOAST_DEBUG")
+
+SET(LIBSQLTOAST_BUILD_DEBUG_OPTS -Werror -g -O0 -fstandalone-debug)
 TARGET_COMPILE_OPTIONS(sqltoast
-    PRIVATE "$<$<CONFIG:DEBUG>:${LIBSQLTOAST_BUILD_DEBUG_OPTS}>"
+   PUBLIC $<$<CONFIG:DEBUG>:${LIBSQLTOAST_BUILD_DEBUG_OPTS}>
 )
 
 # To build a speed-optimized binary, do:
 #
 # $ROOT_DIR/build $> cmake -DCMAKE_BUILD_TYPE=release ..
-SET(LIBSQLTOAST_BUILD_RELEASE_OPTS, "-O2 -falign-functions=1 -falign-jumps=1 -falign-loops=1 -falign-labels=1")
+SET(LIBSQLTOAST_BUILD_RELEASE_OPTS "-O2 -falign-functions=1 -falign-jumps=1 -falign-loops=1 -falign-labels=1")
 TARGET_COMPILE_OPTIONS(sqltoast
-    PRIVATE "$<$<CONFIG:RELEASE>:${LIBSQLTOAST_BUILD_RELEASE_OPTS}>"
-)
+    PUBLIC "$<$<CONFIG:RELEASE>:${LIBSQLTOAST_BUILD_RELEASE_OPTS}>"
+) 
 
 # Header file for configuration templated variables
 CONFIGURE_FILE(
@@ -100,9 +122,10 @@ TARGET_INCLUDE_DIRECTORIES(sqltoast
 #endif ()
 
 # 'make install' to the correct locations (provided by GNUInstallDirs).
-INSTALL(TARGETS sqltoast EXPORT sqltoastConfig
+ INSTALL(TARGETS sqltoast EXPORT sqltoastConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_LIBDIR}/../include
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
 
 # This makes the project importable from the install directory
@@ -112,8 +135,3 @@ INSTALL(EXPORT sqltoastConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/sqltoast
 
 # This makes the project importable from the build directory
 EXPORT(TARGETS sqltoast FILE sqltoastConfig.cmake)
-
-# includes
-install(DIRECTORY include
-    DESTINATION ./
-    FILES_MATCHING PATTERN "*.h*")
